@@ -14,7 +14,8 @@ struct ContentView: View {
                     selectedCategory: $viewModel.selectedCategory,
                     appCount: viewModel.allApps.count,
                     onAppDropped: { app, cat in viewModel.addToCategory(app, category: cat) },
-                    allApps: { viewModel.allApps }
+                    allApps: { viewModel.allApps },
+                    onAddCategory: { viewModel.addCategory(name: $0) }
                 )
                 .frame(width: 160)
                 Divider()

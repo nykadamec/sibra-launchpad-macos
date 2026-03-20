@@ -7,6 +7,10 @@ struct CategorySidebarView: View {
     let appCount: Int
     let onAppDropped: (AppItem, UserDataStore.Category) -> Void
     let allApps: () -> [AppItem]
+    let onAddCategory: (String) -> Void
+
+    @State private var showAddCategory = false
+    @State private var newCategoryName = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
@@ -48,8 +52,75 @@ struct CategorySidebarView: View {
             }
 
             Spacer()
+
+            // Add category
+            if showAddCategory {
+                HStack(spacing: 6) {
+                    TextField("Category name…", text: $newCategoryName)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: 12))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background {
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(Color.primary.opacity(0.08))
+                        }
+                        .onSubmit {
+                            submitNewCategory()
+                        }
+
+                    Button {
+                        submitNewCategory()
+                    } label: {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.green)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(newCategoryName.trimmingCharacters(in: .whitespaces).isEmpty)
+
+                    Button {
+                        cancelAddCategory()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 6)
+            } else {
+                Button {
+                    showAddCategory = true
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "plus.circle")
+                            .font(.system(size: 12))
+                        Text("Add Category")
+                            .font(.system(size: 12))
+                    }
+                    .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
+            }
         }
         .frame(width: 160, alignment: .leading)
+    }
+
+    private func submitNewCategory() {
+        let name = newCategoryName.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { return }
+        onAddCategory(name)
+        newCategoryName = ""
+        showAddCategory = false
+    }
+
+    private func cancelAddCategory() {
+        newCategoryName = ""
+        showAddCategory = false
     }
 
     private func handleDrop(providers: [NSItemProvider], category: UserDataStore.Category) -> Bool {

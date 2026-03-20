@@ -131,4 +131,18 @@ class UserDataStore: @unchecked Sendable {
         }
         save()
     }
+
+    func addCategory(name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        // Avoid duplicates
+        guard !categories.contains(where: { $0.name.lowercased() == trimmed.lowercased() }) else { return }
+        categories.append(Category(name: trimmed))
+        save()
+    }
+
+    func removeCategory(_ category: Category) {
+        categories.removeAll { $0.id == category.id }
+        save()
+    }
 }

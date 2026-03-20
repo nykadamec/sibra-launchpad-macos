@@ -108,6 +108,10 @@ final class AppsViewModel {
         UserDataStore.shared.addApp(app, to: category)
     }
 
+    func addCategory(name: String) {
+        UserDataStore.shared.addCategory(name: name)
+    }
+
     func removeFromCategory(_ app: AppItem, category: UserDataStore.Category) {
         UserDataStore.shared.removeApp(app, from: category)
     }
