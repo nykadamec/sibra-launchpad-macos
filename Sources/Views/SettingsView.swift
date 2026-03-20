@@ -193,5 +193,6 @@ struct TabButton: View {
             }
         }
         .buttonStyle(.plain)
+        .focusable(false)
     }
 }
