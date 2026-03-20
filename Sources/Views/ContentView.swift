@@ -87,14 +87,16 @@ struct ContentView: View {
         .frame(minWidth: 640, minHeight: 420)
         .background {
             RoundedRectangle(cornerRadius: 16)
-                .fill(.regularMaterial.opacity(0.93))
+                .fill(.regularMaterial)
         }
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.primary.opacity(0.12), lineWidth: 1)
         )
         .sheet(isPresented: $viewModel.showSettings) {
-            SettingsView(store: UserDataStore.shared)
+            SettingsView(store: UserDataStore.shared, onReload: {
+                viewModel.loadApps()
+            })
                 .onAppear {
                     NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
                 }

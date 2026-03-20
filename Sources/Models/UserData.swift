@@ -23,6 +23,7 @@ class UserDataStore: @unchecked Sendable {
 
     struct Settings: Codable, Equatable {
         var categoriesEnabled: Bool = true
+        var showSystemApps: Bool = false
         var launchAnimation: Bool = true
         var hotkeysEnabled: Bool = true
     }

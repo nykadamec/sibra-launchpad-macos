@@ -27,8 +27,22 @@ actor AppScannerService {
             options: [.skipsHiddenFiles]
         )
 
+        let showSystem = UserDataStore.shared.settings.showSystemApps
+
         let appBundles = contents.filter { url in
-            url.pathExtension == "app"
+            guard url.pathExtension == "app" else { return false }
+            if showSystem { return true }
+
+            // Hide system apps
+            let path = url.path
+            let systemPaths = [
+                "/System/",
+                "/Library/Apple/System/",
+                "/System/Applications",
+                "/System/Applications/Utilities"
+            ]
+            let isSystem = systemPaths.contains { path.hasPrefix($0) }
+            return !isSystem
         }
 
         return appBundles.map { AppItem(bundleURL: $0) }
