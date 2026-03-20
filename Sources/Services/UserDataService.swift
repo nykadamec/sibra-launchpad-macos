@@ -117,11 +117,10 @@ final class UserDataService: @unchecked Sendable {
 
     // MARK: - Settings
 
-    func updateSettings(_ block: @escaping (inout UserData.Settings) -> Void) {
-        queue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
-            block(&self.data.settings)
-            self.save()
-        }
+    func updateSettings(_ block: (inout UserData.Settings) -> Void) {
+        // Direct synchronous update — called from MainActor via SwiftUI binding
+        block(&data.settings)
+        // Save asynchronously to avoid blocking UI
+        save()
     }
 }
