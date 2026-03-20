@@ -26,7 +26,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: window,
             queue: .main
         ) { [weak window] _ in
-            window?.orderOut(nil)
+            DispatchQueue.main.async {
+                window?.orderOut(nil)
+            }
         }
 
         window.makeKeyAndOrderFront(nil)
@@ -52,7 +54,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView()
 
         window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 720, height: 520),
+            contentRect: NSRect(x: 0, y: 0, width: 800, height: 560),
             styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
@@ -76,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.contentView = NSHostingView(rootView: contentView)
         window.center()
 
-        window.minSize = NSSize(width: 480, height: 360)
+        window.minSize = NSSize(width: 600, height: 400)
     }
 
     // MARK: - Menu Bar

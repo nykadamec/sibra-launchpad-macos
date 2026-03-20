@@ -17,16 +17,21 @@ swiftc \
     Sources/App/main.swift \
     Sources/App/AppDelegate.swift \
     Sources/Utilities/Logger.swift \
+    Sources/Models/UserData.swift \
     Sources/Models/AppItem.swift \
     Sources/Services/AppScannerService.swift \
     Sources/Services/AppLauncherService.swift \
+    Sources/Services/UserDataService.swift \
     Sources/Services/AppUninstallerService.swift \
     Sources/Utilities/HotkeyManager.swift \
     Sources/ViewModels/AppsViewModel.swift \
     Sources/Views/ContentView.swift \
+    Sources/Views/CategorySidebarView.swift \
+    Sources/Views/FavouritesRowView.swift \
     Sources/Views/AppGridView.swift \
     Sources/Views/AppIconCardView.swift \
     Sources/Views/SearchBarView.swift \
+    Sources/Views/SettingsView.swift \
     -o "$MACOS_DIR/$APP_NAME" \
     -target arm64-apple-macosx14.0 \
     -swift-version 6 \
