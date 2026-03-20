@@ -21,7 +21,6 @@ swiftc \
     Sources/Models/AppItem.swift \
     Sources/Services/AppScannerService.swift \
     Sources/Services/AppLauncherService.swift \
-    Sources/Services/UserDataService.swift \
     Sources/Services/AppUninstallerService.swift \
     Sources/Utilities/HotkeyManager.swift \
     Sources/ViewModels/AppsViewModel.swift \

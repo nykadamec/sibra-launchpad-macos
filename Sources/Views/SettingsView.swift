@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
 
-    @Binding var settings: UserData.Settings
+    @Bindable var store: UserDataStore
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -31,9 +31,9 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     // General
                     settingsSection("General") {
-                        Toggle("Enable Categories", isOn: $settings.categoriesEnabled)
-                        Toggle("Launch Animation", isOn: $settings.launchAnimation)
-                        Toggle("Custom Hotkeys", isOn: $settings.hotkeysEnabled)
+                        Toggle("Enable Categories", isOn: $store.settings.categoriesEnabled)
+                        Toggle("Launch Animation", isOn: $store.settings.launchAnimation)
+                        Toggle("Custom Hotkeys", isOn: $store.settings.hotkeysEnabled)
                     }
 
                     // Startup
@@ -41,7 +41,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "info.circle")
                                 .foregroundStyle(.secondary)
-                            Text("Sibra starts automatically with ⌃Space. No login items needed.")
+                            Text("Sibra toggles with ⌃Space. No login items needed.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -59,7 +59,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "doc.text")
                                 .foregroundStyle(.secondary)
-                            Text("Log file: /tmp/Sibra.log")
+                            Text("Log: /tmp/Sibra.log")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -69,6 +69,9 @@ struct SettingsView: View {
             }
         }
         .frame(width: 400, height: 420)
+        .onChange(of: store.settings) { _, _ in
+            store.save()
+        }
     }
 
     @ViewBuilder

@@ -2,8 +2,8 @@ import SwiftUI
 
 struct CategorySidebarView: View {
 
-    let categories: [UserData.Category]
-    @Binding var selectedCategory: UserData.Category?
+    let categories: [UserDataStore.Category]
+    @Binding var selectedCategory: UserDataStore.Category?
     let appCount: Int
 
     var body: some View {

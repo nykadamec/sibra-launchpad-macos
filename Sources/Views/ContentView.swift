@@ -91,18 +91,13 @@ struct ContentView: View {
                 .stroke(Color.primary.opacity(0.12), lineWidth: 1)
         )
         .sheet(isPresented: $viewModel.showSettings) {
-            SettingsView(settings: Binding(
-                get: { viewModel.settings },
-                set: { new in
-                    UserDataService.shared.updateSettings { $0 = new }
+            SettingsView(store: UserDataStore.shared)
+                .onAppear {
+                    NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
                 }
-            ))
-            .onAppear {
-                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
-            }
-            .onDisappear {
-                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetClosed"), object: nil)
-            }
+                .onDisappear {
+                    NotificationCenter.default.post(name: NSNotification.Name("SibraSheetClosed"), object: nil)
+                }
         }
         .onAppear {
             viewModel.loadApps()

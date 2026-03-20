@@ -10,9 +10,9 @@ struct AppIconCardView: View {
     let onRevealInFinder: () -> Void
     let onToggleFavourite: () -> Void
     let isFavourite: Bool
-    let onAddToCategory: (UserData.Category) -> Void
-    let categories: [UserData.Category]
-    let currentCategory: UserData.Category?
+    let onAddToCategory: (UserDataStore.Category) -> Void
+    let categories: [UserDataStore.Category]
+    let currentCategory: UserDataStore.Category?
 
     @State private var isHovered = false
     @State private var isLaunching = false
@@ -105,7 +105,7 @@ struct AppIconCardView: View {
         }
         .sheet(isPresented: $showHotkeySheet) {
             HotkeyRecorderSheet(app: app) { hotkey in
-                UserDataService.shared.setHotkey(hotkey, for: app)
+                UserDataStore.shared.setHotkey(hotkey, for: app)
             }
         }
     }
@@ -191,7 +191,7 @@ struct HotkeyRecorderSheet: View {
         .padding(24)
         .frame(width: 320)
         .onAppear {
-            if let existing = UserDataService.shared.hotkey(for: app) {
+            if let existing = UserDataStore.shared.hotkey(for: app) {
                 hotkeyText = existing
             }
             startMonitoring()

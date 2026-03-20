@@ -12,19 +12,17 @@ final class AppsViewModel {
     private(set) var errorMessage: String?
 
     var searchText: String = ""
-    var selectedCategory: UserData.Category?
+    var selectedCategory: UserDataStore.Category?
     var showSettings = false
     var isDraggingApp: AppItem?
 
     var filteredApps: [AppItem] {
         var apps = allApps
 
-        // Filter by category
         if let cat = selectedCategory {
             apps = apps.filter { cat.appPaths.contains($0.bundleURL.path) }
         }
 
-        // Filter by search
         if !searchText.isEmpty {
             apps = apps.filter {
                 $0.name.localizedCaseInsensitiveContains(searchText)
@@ -35,18 +33,18 @@ final class AppsViewModel {
     }
 
     var favouriteApps: [AppItem] {
-        let userData = UserDataService.shared.data
-        return userData.favourites.compactMap { path in
+        UserDataStore.shared.favourites.compactMap { path in
             allApps.first { $0.bundleURL.path == path }
         }
     }
 
-    var categories: [UserData.Category] {
-        UserDataService.shared.data.categories
+    var categories: [UserDataStore.Category] {
+        UserDataStore.shared.categories
     }
 
-    var settings: UserData.Settings {
-        UserDataService.shared.data.settings
+    var settings: UserDataStore.Settings {
+        get { UserDataStore.shared.settings }
+        set { UserDataStore.shared.settings = newValue; UserDataStore.shared.save() }
     }
 
     private let scanner = AppScannerService()
@@ -99,30 +97,30 @@ final class AppsViewModel {
     }
 
     func toggleFavourite(_ app: AppItem) {
-        UserDataService.shared.toggleFavourite(app)
+        UserDataStore.shared.toggleFavourite(app)
     }
 
     func isFavourite(_ app: AppItem) -> Bool {
-        UserDataService.shared.isFavourite(app)
+        UserDataStore.shared.isFavourite(app)
     }
 
-    func addToCategory(_ app: AppItem, category: UserData.Category) {
-        UserDataService.shared.addApp(app, to: category)
+    func addToCategory(_ app: AppItem, category: UserDataStore.Category) {
+        UserDataStore.shared.addApp(app, to: category)
     }
 
-    func removeFromCategory(_ app: AppItem, category: UserData.Category) {
-        UserDataService.shared.removeApp(app, from: category)
+    func removeFromCategory(_ app: AppItem, category: UserDataStore.Category) {
+        UserDataStore.shared.removeApp(app, from: category)
     }
 
-    func category(for app: AppItem) -> UserData.Category? {
-        UserDataService.shared.category(for: app)
+    func category(for app: AppItem) -> UserDataStore.Category? {
+        UserDataStore.shared.category(for: app)
     }
 
     func hotkey(for app: AppItem) -> String? {
-        UserDataService.shared.hotkey(for: app)
+        UserDataStore.shared.hotkey(for: app)
     }
 
     func setHotkey(_ hotkey: String?, for app: AppItem) {
-        UserDataService.shared.setHotkey(hotkey, for: app)
+        UserDataStore.shared.setHotkey(hotkey, for: app)
     }
 }

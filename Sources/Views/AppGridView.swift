@@ -7,9 +7,9 @@ struct AppGridView: View {
     let onUninstall: (AppItem) -> Void
     let onRevealInFinder: (AppItem) -> Void
     let onToggleFavourite: (AppItem) -> Void
-    let onAddToCategory: (AppItem, UserData.Category) -> Void
-    let categories: [UserData.Category]
-    let currentCategory: (AppItem) -> UserData.Category?
+    let onAddToCategory: (AppItem, UserDataStore.Category) -> Void
+    let categories: [UserDataStore.Category]
+    let currentCategory: (AppItem) -> UserDataStore.Category?
 
     private let columns = Array(repeating: GridItem(.fixed(88), spacing: 16), count: 6)
 
