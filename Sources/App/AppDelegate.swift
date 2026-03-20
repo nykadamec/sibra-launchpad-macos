@@ -33,22 +33,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        // Fullscreen notifications
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("SibraEnterFullscreen"),
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.enterFullscreen()
-        }
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("SibraExitFullscreen"),
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.exitFullscreen()
-        }
-
         // Sheet tracking
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name("SibraSheetOpened"),
@@ -89,7 +73,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 800, height: 560),
-            styleMask: [.borderless, .fullSizeContentView],
+            styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -113,27 +97,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         window.minSize = NSSize(width: 800, height: 560)
         window.maxSize = NSSize(width: 800, height: 560)
-    }
-
-    // MARK: - Fullscreen
-
-    @MainActor
-    private func enterFullscreen() {
-        if let screen = NSScreen.main {
-            window.setFrame(screen.frame, display: true)
-        }
-        window.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.maximumWindow)))
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-    }
-
-    @MainActor
-    private func exitFullscreen() {
-        window.setFrame(NSRect(x: 0, y: 0, width: 800, height: 560), display: true)
-        window.center()
-        window.level = .floating
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - Menu Bar
@@ -173,11 +136,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor
     func toggleWindow() {
-        if UserDataStore.shared.settings.displayMode == .fullscreen {
-            exitFullscreen()
-            UserDataStore.shared.settings.displayMode = .windowed
-            UserDataStore.shared.save()
-        } else if window.isVisible {
+        if window.isVisible {
             window.orderOut(nil)
         } else {
             window.makeKeyAndOrderFront(nil)

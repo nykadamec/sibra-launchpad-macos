@@ -79,30 +79,6 @@ struct SettingsView: View {
             ))
             Toggle("Launch Animation", isOn: $store.settings.launchAnimation)
         }
-
-        settingsSection("Display Mode") {
-            HStack(spacing: 8) {
-                ModeButton(
-                    title: "Windowed",
-                    icon: "rectangle",
-                    isSelected: store.settings.displayMode == .windowed
-                ) {
-                    store.settings.displayMode = .windowed
-                    store.save()
-                    NotificationCenter.default.post(name: NSNotification.Name("SibraExitFullscreen"), object: nil)
-                }
-
-                ModeButton(
-                    title: "Fullscreen",
-                    icon: "arrow.up.left.and.arrow.down.right",
-                    isSelected: store.settings.displayMode == .fullscreen
-                ) {
-                    store.settings.displayMode = .fullscreen
-                    store.save()
-                    NotificationCenter.default.post(name: NSNotification.Name("SibraEnterFullscreen"), object: nil)
-                }
-            }
-        }
     }
 
     @ViewBuilder
@@ -182,38 +158,6 @@ struct SettingsView: View {
                     .fill(Color.primary.opacity(0.05))
             }
         }
-    }
-}
-
-struct ModeButton: View {
-    let title: String
-    let icon: String
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 16))
-                Text(title)
-                    .font(.system(size: 11, weight: .medium))
-            }
-            .foregroundStyle(isSelected ? .primary : .secondary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
-            .background {
-                if isSelected {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.accentColor.opacity(0.15))
-                }
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isSelected ? Color.accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
-            }
-        }
-        .buttonStyle(.plain)
     }
 }
 
