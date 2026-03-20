@@ -6,6 +6,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var window: NSWindow!
     private var hotkeyManager: HotkeyManager!
     private var statusItem: NSStatusItem?
+    private var isSheetOpen = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Task { @MainActor in
@@ -20,15 +21,39 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupHotkey()
         NSApp.setActivationPolicy(.accessory)
 
-        // Hide window when it loses focus (click outside)
+        // Hide window when it loses focus (click outside) — but not if a sheet is open
         NotificationCenter.default.addObserver(
             forName: NSWindow.didResignKeyNotification,
             object: window,
             queue: .main
-        ) { [weak window] _ in
+        ) { [weak self] _ in
+            guard let self = self, !self.isSheetOpen else { return }
             DispatchQueue.main.async {
-                window?.orderOut(nil)
+                self.window.orderOut(nil)
             }
+        }
+
+        // Track sheet open/close
+        NotificationCenter.default.addObserver(
+            forName: NSWindow.didEnterFullScreenNotification,
+            object: nil,
+            queue: .main
+        ) { _ in }
+
+        // Listen for sheet visibility
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("SibraSheetOpened"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.isSheetOpen = true
+        }
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("SibraSheetClosed"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.isSheetOpen = false
         }
 
         window.makeKeyAndOrderFront(nil)

@@ -97,6 +97,12 @@ struct ContentView: View {
                     UserDataService.shared.updateSettings { $0 = new }
                 }
             ))
+            .onAppear {
+                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
+            }
+            .onDisappear {
+                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetClosed"), object: nil)
+            }
         }
         .onAppear {
             viewModel.loadApps()
