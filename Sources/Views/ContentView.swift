@@ -12,7 +12,9 @@ struct ContentView: View {
                 CategorySidebarView(
                     categories: viewModel.categories,
                     selectedCategory: $viewModel.selectedCategory,
-                    appCount: viewModel.allApps.count
+                    appCount: viewModel.allApps.count,
+                    onAppDropped: { app, cat in viewModel.addToCategory(app, category: cat) },
+                    allApps: { viewModel.allApps }
                 )
                 .frame(width: 160)
                 Divider()

@@ -22,7 +22,7 @@ struct AppGridView: View {
                     onUninstall: { onUninstall(app) },
                     onRevealInFinder: { onRevealInFinder(app) },
                     onToggleFavourite: { onToggleFavourite(app) },
-                    isFavourite: categories.isEmpty ? false : categories.flatMap { $0.appPaths }.contains(app.bundleURL.path),
+                    isFavourite: UserDataStore.shared.isFavourite(app),
                     onAddToCategory: { cat in onAddToCategory(app, cat) },
                     categories: categories,
                     currentCategory: currentCategory(app)

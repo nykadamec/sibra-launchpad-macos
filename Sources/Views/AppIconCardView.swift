@@ -1,6 +1,5 @@
 import SwiftUI
 import AppKit
-import UniformTypeIdentifiers
 
 struct AppIconCardView: View {
 
@@ -17,6 +16,9 @@ struct AppIconCardView: View {
     @State private var isHovered = false
     @State private var isLaunching = false
     @State private var showHotkeySheet = false
+
+    // Drag data — the app's bundle path as UTF8 string
+    private var dragItem: String { app.bundleURL.path }
 
     var body: some View {
         VStack(spacing: 6) {
@@ -53,6 +55,13 @@ struct AppIconCardView: View {
         .onTapGesture(count: 2) {
             launchWithAnimation()
         }
+        .draggable(dragItem) {
+            // Drag preview
+            Image(nsImage: app.icon)
+                .resizable()
+                .frame(width: 48, height: 48)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
         .contextMenu {
             Button("Open") {
                 launchWithAnimation()
@@ -62,7 +71,6 @@ struct AppIconCardView: View {
             }
             Divider()
 
-            // Favourite
             Button {
                 onToggleFavourite()
             } label: {
@@ -72,7 +80,6 @@ struct AppIconCardView: View {
                 )
             }
 
-            // Categories submenu
             if !categories.isEmpty {
                 Menu("Add to Category") {
                     ForEach(categories) { cat in
