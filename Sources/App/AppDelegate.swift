@@ -80,7 +80,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 800, height: 560),
-            styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
+            styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -94,7 +94,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         window.isOpaque = false
-        window.hasShadow = true
+        window.hasShadow = false
         window.isMovableByWindowBackground = false
         window.level = .floating
         window.acceptsMouseMovedEvents = true
@@ -103,7 +103,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.contentView = NSHostingView(rootView: contentView)
         window.center()
 
-        window.minSize = NSSize(width: 600, height: 400)
+        window.minSize = NSSize(width: 800, height: 560)
+        window.maxSize = NSSize(width: 800, height: 560)
     }
 
     // MARK: - Menu Bar
