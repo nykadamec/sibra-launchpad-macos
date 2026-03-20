@@ -57,9 +57,11 @@ final class AppsViewModel {
         isLoading = true
         errorMessage = nil
 
+        let showSystem = UserDataStore.shared.settings.showSystemApps
+
         Task {
             do {
-                let apps = try await scanner.scanApplications()
+                let apps = try await scanner.scanApplications(showSystemApps: showSystem)
                 self.allApps = apps
                 self.isLoading = false
             } catch {

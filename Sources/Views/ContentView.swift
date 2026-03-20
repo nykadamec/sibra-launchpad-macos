@@ -87,7 +87,7 @@ struct ContentView: View {
         .frame(minWidth: 640, minHeight: 420)
         .background {
             RoundedRectangle(cornerRadius: 16)
-                .fill(.regularMaterial)
+                .fill(.ultraThickMaterial)
         }
         .overlay(
             RoundedRectangle(cornerRadius: 16)
