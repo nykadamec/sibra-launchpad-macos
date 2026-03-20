@@ -6,6 +6,21 @@ struct ContentView: View {
     @State private var viewModel = AppsViewModel()
 
     var body: some View {
+        Group {
+            if UserDataStore.shared.settings.displayMode == .fullscreen {
+                FullscreenContentView(store: UserDataStore.shared)
+            } else {
+                WindowedContentView(viewModel: viewModel)
+            }
+        }
+    }
+}
+
+struct WindowedContentView: View {
+
+    @Bindable var viewModel: AppsViewModel
+
+    var body: some View {
         HStack(spacing: 0) {
             // Categories sidebar
             if viewModel.settings.categoriesEnabled {
@@ -25,6 +40,19 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 // Top bar
                 HStack(spacing: 12) {
+                    // Fullscreen button
+                    Button {
+                        UserDataStore.shared.settings.displayMode = .fullscreen
+                        UserDataStore.shared.save()
+                        NotificationCenter.default.post(name: NSNotification.Name("SibraEnterFullscreen"), object: nil)
+                    } label: {
+                        Image(systemName: "arrow.up.left.and.arrow.down.right")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Fullscreen")
+
                     SearchBarView(searchText: $viewModel.searchText)
                         .frame(maxWidth: .infinity)
 
@@ -46,6 +74,7 @@ struct ContentView: View {
                 if !viewModel.favouriteApps.isEmpty {
                     FavouritesRowView(
                         apps: viewModel.favouriteApps,
+                        largeIcons: false,
                         onLaunch: { viewModel.launchApp($0) },
                         onRemove: { viewModel.toggleFavourite($0) }
                     )
@@ -84,7 +113,7 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 640, minHeight: 420)
+        .frame(minWidth: 800, minHeight: 560)
         .background {
             RoundedRectangle(cornerRadius: 16)
                 .fill(.ultraThickMaterial)
@@ -98,12 +127,12 @@ struct ContentView: View {
             SettingsView(store: UserDataStore.shared, onReload: {
                 viewModel.loadApps()
             })
-                .onAppear {
-                    NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
-                }
-                .onDisappear {
-                    NotificationCenter.default.post(name: NSNotification.Name("SibraSheetClosed"), object: nil)
-                }
+            .onAppear {
+                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetOpened"), object: nil)
+            }
+            .onDisappear {
+                NotificationCenter.default.post(name: NSNotification.Name("SibraSheetClosed"), object: nil)
+            }
         }
         .onAppear {
             viewModel.loadApps()

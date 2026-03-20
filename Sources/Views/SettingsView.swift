@@ -77,14 +77,31 @@ struct SettingsView: View {
                     onReload()
                 }
             ))
-        }
-
-        settingsSection("Appearance") {
             Toggle("Launch Animation", isOn: $store.settings.launchAnimation)
         }
 
-        settingsSection("Hotkeys") {
-            Toggle("Custom Hotkeys", isOn: $store.settings.hotkeysEnabled)
+        settingsSection("Display Mode") {
+            HStack(spacing: 8) {
+                ModeButton(
+                    title: "Windowed",
+                    icon: "rectangle",
+                    isSelected: store.settings.displayMode == .windowed
+                ) {
+                    store.settings.displayMode = .windowed
+                    store.save()
+                    NotificationCenter.default.post(name: NSNotification.Name("SibraExitFullscreen"), object: nil)
+                }
+
+                ModeButton(
+                    title: "Fullscreen",
+                    icon: "arrow.up.left.and.arrow.down.right",
+                    isSelected: store.settings.displayMode == .fullscreen
+                ) {
+                    store.settings.displayMode = .fullscreen
+                    store.save()
+                    NotificationCenter.default.post(name: NSNotification.Name("SibraEnterFullscreen"), object: nil)
+                }
+            }
         }
     }
 
@@ -94,28 +111,28 @@ struct SettingsView: View {
             HStack {
                 Text("Toggle Sibra")
                 Spacer()
-                Text("⌃Space")
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundStyle(.secondary)
+                HotkeyDisplayButton(hotkey: store.settings.globalHotkey) { newHotkey in
+                    store.settings.globalHotkey = newHotkey
+                    store.save()
+                }
             }
             HStack {
                 Image(systemName: "info.circle")
                     .foregroundStyle(.secondary)
-                Text("Press to show or hide Sibra window")
+                Text("Click the button and press a new key combination")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
 
-        if store.settings.hotkeysEnabled {
-            settingsSection("Per-App Hotkeys") {
-                HStack {
-                    Image(systemName: "info.circle")
-                        .foregroundStyle(.secondary)
-                    Text("Right-click any app → Set Hotkey… to assign a personal shortcut")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+        settingsSection("Per-App Hotkeys") {
+            Toggle("Enable Per-App Hotkeys", isOn: $store.settings.hotkeysEnabled)
+            HStack {
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.secondary)
+                Text("Right-click any app → Set Hotkey to assign a personal shortcut")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -168,6 +185,110 @@ struct SettingsView: View {
     }
 }
 
+struct ModeButton: View {
+    let title: String
+    let icon: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                Text(title)
+                    .font(.system(size: 11, weight: .medium))
+            }
+            .foregroundStyle(isSelected ? .primary : .secondary)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background {
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.accentColor.opacity(0.15))
+                }
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isSelected ? Color.accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct HotkeyDisplayButton: View {
+    let hotkey: String
+    let onChange: (String) -> Void
+
+    @State private var isRecording = false
+    @State private var hotkeyText = ""
+    @State private var monitor: Any?
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 6)
+                .fill(Color.primary.opacity(0.06))
+            RoundedRectangle(cornerRadius: 6)
+                .stroke(isRecording ? Color.accentColor : Color.clear, lineWidth: 1)
+
+            VStack(spacing: 2) {
+                Text(isRecording ? (hotkeyText.isEmpty ? "Recording..." : hotkeyText) : hotkey)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(.primary)
+                if isRecording {
+                    Text("press keys…")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .frame(width: 110, height: 44)
+        .onTapGesture {
+            isRecording = true
+            hotkeyText = ""
+            startMonitoring()
+        }
+        .onChange(of: isRecording) { _, newVal in
+            if !newVal {
+                stopMonitoring()
+                if !hotkeyText.isEmpty {
+                    onChange(hotkeyText)
+                }
+            }
+        }
+        .onDisappear {
+            stopMonitoring()
+        }
+    }
+
+    private func startMonitoring() {
+        monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            guard isRecording else { return event }
+            let chars = event.charactersIgnoringModifiers ?? ""
+            var parts: [String] = []
+            let mods = event.modifierFlags
+            if mods.contains(.control) { parts.append("⌃") }
+            if mods.contains(.option) { parts.append("⌥") }
+            if mods.contains(.shift) { parts.append("⇧") }
+            if mods.contains(.command) { parts.append("⌘") }
+            let key = chars.uppercased()
+            if !key.isEmpty && !parts.isEmpty {
+                hotkeyText = parts.joined() + key
+                return nil
+            }
+            return nil
+        }
+    }
+
+    private func stopMonitoring() {
+        if let m = monitor {
+            NSEvent.removeMonitor(m)
+            monitor = nil
+        }
+    }
+}
+
 struct TabButton: View {
     let title: String
     let icon: String
@@ -193,6 +314,5 @@ struct TabButton: View {
             }
         }
         .buttonStyle(.plain)
-        .focusable(false)
     }
 }

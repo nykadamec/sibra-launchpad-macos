@@ -31,6 +31,7 @@ swiftc \
     Sources/Views/AppIconCardView.swift \
     Sources/Views/SearchBarView.swift \
     Sources/Views/SettingsView.swift \
+    Sources/Views/FullscreenContentView.swift \
     -o "$MACOS_DIR/$APP_NAME" \
     -target arm64-apple-macosx14.0 \
     -swift-version 6 \

@@ -26,6 +26,13 @@ class UserDataStore: @unchecked Sendable {
         var showSystemApps: Bool = false
         var launchAnimation: Bool = true
         var hotkeysEnabled: Bool = true
+        var displayMode: DisplayMode = .windowed
+        var globalHotkey: String = "⌃Space"
+
+        enum DisplayMode: String, Codable, Equatable {
+            case windowed
+            case fullscreen
+        }
     }
 
     private let fileURL: URL = {
