@@ -137,7 +137,7 @@ final class WindowManager {
         })
 
         let containerView = OnboardingWindowContentView(rootView: rootView)
-        let hostingView = NSHostingView(rootView: containerView)
+        let hostingView = NoFirstResponderHostingView(rootView: containerView)
         hostingView.wantsLayer = true
         hostingView.layer?.cornerRadius = 16
         hostingView.layer?.masksToBounds = true
@@ -249,11 +249,22 @@ final class WindowManager {
         }
 
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "Show Sibra", action: #selector(showMainWindowAction), keyEquivalent: ""))
+
+        let showItem = NSMenuItem(title: "Show Sibra", action: #selector(showMainWindowAction), keyEquivalent: "")
+        showItem.target = self
+        menu.addItem(showItem)
+
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Settings…", action: #selector(showSettingsAction), keyEquivalent: ","))
+
+        let settingsItem = NSMenuItem(title: "Settings…", action: #selector(showSettingsAction), keyEquivalent: ",")
+        settingsItem.target = self
+        menu.addItem(settingsItem)
+
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+
+        let quitItem = NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        quitItem.target = NSApp
+        menu.addItem(quitItem)
 
         statusItem?.menu = menu
     }
@@ -304,6 +315,12 @@ final class WindowManager {
     func handleReopen() {
         mainWindow?.makeKeyAndOrderFront(nil)
     }
+}
+
+// MARK: - No-First-Responder Hosting View
+
+class NoFirstResponderHostingView<Content: View>: NSHostingView<Content> {
+    override var acceptsFirstResponder: Bool { false }
 }
 
 

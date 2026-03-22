@@ -46,6 +46,7 @@ struct OnboardingView: View {
                             .animation(.easeInOut(duration: 0.15), value: isHoveringClose)
                     }
                     .buttonStyle(.plain)
+                    .focusEffectDisabled()
                     .sibraCursor(.pointingHand)
                     .onHover { hovering in
                         isHoveringClose = hovering
