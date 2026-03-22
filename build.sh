@@ -41,18 +41,8 @@ swiftc \
 
 echo "📋 Copying resources..."
 cp Resources/Info.plist "$CONTENTS_DIR/"
+cp Resources/AppIcon.icns "$RESOURCES_DIR/"
 cp Resources/Sibra.entitlements "$CONTENTS_DIR/"
-
-# Create launch helper
-cat > "$OUT_DIR/run_sibra.sh" << 'RUNSCRIPT'
-#!/bin/bash
-DIR="$(cd "$(dirname "$0")" && pwd)"
-open "$DIR/Sibra.app"
-echo "Log: /tmp/Sibra.log"
-echo "View log: tail -f /tmp/Sibra.log"
-RUNSCRIPT
-chmod +x "$OUT_DIR/run_sibra.sh"
-cp Resources/Sibra.entitlements "$CONTENTS_DIR/Sibra.entitlements"
 
 # Create launch script
 cat > "$OUT_DIR/run_sibra.sh" << 'RUNSCRIPT'
