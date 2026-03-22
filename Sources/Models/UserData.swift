@@ -36,6 +36,12 @@ class UserDataStore: @unchecked Sendable {
             }
         }
         
+        enum Theme: String, Codable, CaseIterable {
+            case system
+            case light
+            case dark
+        }
+
         enum IconScale: String, Codable, CaseIterable {
             case small
             case normal
@@ -75,6 +81,7 @@ class UserDataStore: @unchecked Sendable {
         var windowSize: WindowSize = .normal
         var iconScale: IconScale = .normal
         var oneClickStart: Bool = false
+        var theme: Theme = .system
 
         init() {}
 
@@ -89,6 +96,7 @@ class UserDataStore: @unchecked Sendable {
             windowSize = try container.decodeIfPresent(WindowSize.self, forKey: .windowSize) ?? .normal
             iconScale = try container.decodeIfPresent(IconScale.self, forKey: .iconScale) ?? .normal
             oneClickStart = try container.decodeIfPresent(Bool.self, forKey: .oneClickStart) ?? false
+            theme = try container.decodeIfPresent(Theme.self, forKey: .theme) ?? .system
         }
     }
 

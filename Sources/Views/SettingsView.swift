@@ -7,6 +7,14 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     let onReload: () -> Void
 
+    private func colorScheme(for theme: UserDataStore.Settings.Theme) -> ColorScheme? {
+        switch theme {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+
     @State private var selectedTab = 0
     @Namespace private var tabAnimation
 
@@ -79,14 +87,34 @@ struct SettingsView: View {
         }
         .frame(width: 400, height: 440)
         .background {
-            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
+            VisualEffectView(
+                material: .hudWindow,
+                blendingMode: .behindWindow,
+                forcedColorScheme: colorScheme(for: store.settings.theme)
+            )
         }
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     @ViewBuilder
     private var generalTab: some View {
-        settingsSection("Display") {
+        settingsSection("Appearance") {
+            SettingsRow(title: "Theme", icon: "circle.lefthalf.filled", iconColor: .purple) {
+                Picker("", selection: Binding(
+                    get: { store.settings.theme },
+                    set: {
+                        store.settings.theme = $0
+                        store.save()
+                    }
+                )) {
+                    Text("System").tag(UserDataStore.Settings.Theme.system)
+                    Text("Light").tag(UserDataStore.Settings.Theme.light)
+                    Text("Dark").tag(UserDataStore.Settings.Theme.dark)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 180)
+            }
+            Divider().padding(.leading, 52)
             SettingsRow(title: "Window Size", icon: "arrow.up.left.and.arrow.down.right", iconColor: .indigo) {
                 Picker("", selection: Binding(
                     get: { store.settings.windowSize },

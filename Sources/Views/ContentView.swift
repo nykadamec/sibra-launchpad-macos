@@ -4,18 +4,26 @@ import AppKit
 struct VisualEffectView: NSViewRepresentable {
     var material: NSVisualEffectView.Material
     var blendingMode: NSVisualEffectView.BlendingMode
+    var forcedColorScheme: ColorScheme? = nil
 
     func makeNSView(context: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()
         view.material = material
         view.blendingMode = blendingMode
         view.state = .active
+        applyAppearance(to: view, context: context)
         return view
     }
 
     func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
         nsView.material = material
         nsView.blendingMode = blendingMode
+        applyAppearance(to: nsView, context: context)
+    }
+
+    private func applyAppearance(to view: NSVisualEffectView, context: Context) {
+        let scheme = forcedColorScheme ?? (context.environment.colorScheme == .dark ? .dark : .light)
+        view.appearance = NSAppearance(named: scheme == .dark ? .darkAqua : .aqua)
     }
 }
 
@@ -23,6 +31,14 @@ struct ContentView: View {
 
     @State private var viewModel = AppsViewModel()
     @State private var isHoveringSettings = false
+
+    private func colorScheme(for theme: UserDataStore.Settings.Theme) -> ColorScheme? {
+        switch theme {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -115,9 +131,14 @@ struct ContentView: View {
             }
         }
         .frame(minWidth: viewModel.settings.windowSize.size.width, minHeight: viewModel.settings.windowSize.size.height)
+        .preferredColorScheme(colorScheme(for: viewModel.settings.theme))
         .background {
             ZStack {
-                VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
+                VisualEffectView(
+                    material: .hudWindow,
+                    blendingMode: .behindWindow,
+                    forcedColorScheme: colorScheme(for: viewModel.settings.theme)
+                )
                     .ignoresSafeArea()
                 
                 Color(NSColor.windowBackgroundColor).opacity(0.5)
