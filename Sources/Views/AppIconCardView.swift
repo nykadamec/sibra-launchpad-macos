@@ -19,14 +19,18 @@ struct AppIconCardView: View {
 
     // Drag data — the app's bundle path as UTF8 string
     private var dragItem: String { app.bundleURL.path }
+    
+    private var iconScale: UserDataStore.Settings.IconScale {
+        UserDataStore.shared.settings.iconScale
+    }
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: iconScale == .small ? 4 : 6) {
             ZStack {
                 Image(nsImage: app.icon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 64, height: 64)
+                    .frame(width: iconScale.iconSize, height: iconScale.iconSize)
                     .scaleEffect(isLaunching ? 0.82 : (isHovered ? 1.12 : 1.0))
                     .opacity(isLaunching ? 0.0 : 1.0)
                     .animation(.easeOut(duration: 0.2), value: isLaunching)
@@ -34,19 +38,19 @@ struct AppIconCardView: View {
 
                 if isLaunching {
                     Image(systemName: "arrow.up.forward.app")
-                        .font(.system(size: 20))
+                        .font(.system(size: iconScale == .small ? 16 : 20))
                         .foregroundStyle(.secondary)
                 }
             }
 
             Text(app.name)
-                .font(.system(size: 11, weight: .medium))
+                .font(.system(size: iconScale == .small ? 10 : 11, weight: .medium))
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .frame(height: 28)
+                .frame(height: iconScale == .small ? 24 : 28)
                 .foregroundStyle(.primary)
         }
-        .frame(width: 88, height: 100)
+        .frame(width: iconScale.cardWidth, height: iconScale.cardHeight)
         .contentShape(Rectangle())
         .opacity(isHovered ? 1.0 : 0.85)
         .onHover { hovering in

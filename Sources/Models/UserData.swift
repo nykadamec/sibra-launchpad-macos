@@ -22,11 +22,72 @@ class UserDataStore: @unchecked Sendable {
     }
 
     struct Settings: Codable, Equatable {
+        enum WindowSize: String, Codable, CaseIterable {
+            case small
+            case normal
+            case big
+
+            var size: CGSize {
+                switch self {
+                case .small: return CGSize(width: 600, height: 420)
+                case .normal: return CGSize(width: 800, height: 560)
+                case .big: return CGSize(width: 1000, height: 700)
+                }
+            }
+        }
+        
+        enum IconScale: String, Codable, CaseIterable {
+            case small
+            case normal
+            case big
+            
+            var iconSize: CGFloat {
+                switch self {
+                case .small: return 48
+                case .normal: return 64
+                case .big: return 80
+                }
+            }
+            
+            var cardWidth: CGFloat {
+                switch self {
+                case .small: return 68
+                case .normal: return 88
+                case .big: return 108
+                }
+            }
+            
+            var cardHeight: CGFloat {
+                switch self {
+                case .small: return 80
+                case .normal: return 100
+                case .big: return 120
+                }
+            }
+        }
+
         var categoriesEnabled: Bool = true
         var showSystemApps: Bool = false
         var launchAnimation: Bool = true
         var hotkeysEnabled: Bool = true
         var globalHotkey: String = "⌃Space"
+        var windowOpacity: Double = 0.9
+        var windowSize: WindowSize = .normal
+        var iconScale: IconScale = .normal
+
+        init() {}
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            categoriesEnabled = try container.decodeIfPresent(Bool.self, forKey: .categoriesEnabled) ?? true
+            showSystemApps = try container.decodeIfPresent(Bool.self, forKey: .showSystemApps) ?? false
+            launchAnimation = try container.decodeIfPresent(Bool.self, forKey: .launchAnimation) ?? true
+            hotkeysEnabled = try container.decodeIfPresent(Bool.self, forKey: .hotkeysEnabled) ?? true
+            globalHotkey = try container.decodeIfPresent(String.self, forKey: .globalHotkey) ?? "⌃Space"
+            windowOpacity = try container.decodeIfPresent(Double.self, forKey: .windowOpacity) ?? 0.9
+            windowSize = try container.decodeIfPresent(WindowSize.self, forKey: .windowSize) ?? .normal
+            iconScale = try container.decodeIfPresent(IconScale.self, forKey: .iconScale) ?? .normal
+        }
     }
 
     private let fileURL: URL = {

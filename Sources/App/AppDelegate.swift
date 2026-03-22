@@ -76,9 +76,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupWindow() {
         let contentView = ContentView()
 
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 800, height: 560),
-            styleMask: [.titled, .closable, .fullSizeContentView],
+        let windowSize = UserDataStore.shared.settings.windowSize.size
+        
+        window = SibraWindow(
+            contentRect: NSRect(x: 0, y: 0, width: windowSize.width, height: windowSize.height),
+            styleMask: [.closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
@@ -86,12 +88,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.backgroundColor = .clear
-        window.toolbarStyle = .unified
-        window.standardWindowButton(.closeButton)?.isHidden = true
-        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-        window.standardWindowButton(.zoomButton)?.isHidden = true
         window.isOpaque = false
-        window.hasShadow = true
+        window.hasShadow = false
         window.isMovableByWindowBackground = false
         window.level = .floating
         window.acceptsMouseMovedEvents = true
@@ -100,7 +98,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.contentView = NSHostingView(rootView: contentView)
 
         // Center on the main screen using visibleFrame (respects menu bar & Dock)
-        let windowSize = NSSize(width: 800, height: 560)
         if let screen = NSScreen.main ?? NSScreen.screens.first {
             let screenFrame = screen.visibleFrame
             let x = screenFrame.origin.x + (screenFrame.width - windowSize.width) / 2
@@ -110,8 +107,43 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             window.center()
         }
 
-        window.minSize = NSSize(width: 800, height: 560)
-        window.maxSize = NSSize(width: 800, height: 560)
+        window.minSize = windowSize
+        window.maxSize = windowSize
+        
+        // Listen for size changes
+        NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("SibraWindowSizeChanged"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateWindowSize()
+        }
+    }
+
+    @MainActor
+    private func updateWindowSize() {
+        guard let window = window else { return }
+        let newSize = UserDataStore.shared.settings.windowSize.size
+        
+        // Calculate new frame keeping the center position
+        var frame = window.frame
+        let widthDiff = newSize.width - frame.width
+        let heightDiff = newSize.height - frame.height
+        
+        frame.origin.x -= widthDiff / 2
+        frame.origin.y -= heightDiff / 2
+        frame.size = newSize
+        
+        // Update constraints first
+        window.minSize = newSize
+        window.maxSize = newSize
+        
+        // Animate frame change
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.3
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(frame, display: true)
+        }
     }
 
     // MARK: - Menu Bar
@@ -192,5 +224,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     deinit {
         hotkeyManager.unregister()
+    }
+}
+
+class SibraWindow: NSWindow {
+    override var canBecomeKey: Bool {
+        return true
+    }
+    
+    override var canBecomeMain: Bool {
+        return true
     }
 }

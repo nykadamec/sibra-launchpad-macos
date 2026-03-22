@@ -11,7 +11,10 @@ struct AppGridView: View {
     let categories: [UserDataStore.Category]
     let currentCategory: (AppItem) -> UserDataStore.Category?
 
-    private let columns = Array(repeating: GridItem(.fixed(88), spacing: 16), count: 6)
+    private var columns: [GridItem] {
+        let cardWidth = UserDataStore.shared.settings.iconScale.cardWidth
+        return [GridItem(.adaptive(minimum: cardWidth, maximum: cardWidth + 12), spacing: 16)]
+    }
 
     var body: some View {
         LazyVGrid(columns: columns, alignment: .center, spacing: 12) {

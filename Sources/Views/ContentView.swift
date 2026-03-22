@@ -1,6 +1,24 @@
 import SwiftUI
 import AppKit
 
+struct VisualEffectView: NSViewRepresentable {
+    var material: NSVisualEffectView.Material
+    var blendingMode: NSVisualEffectView.BlendingMode
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
+    }
+}
+
 struct ContentView: View {
 
     @State private var viewModel = AppsViewModel()
@@ -85,18 +103,22 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(minWidth: 800, minHeight: 560)
+        .frame(minWidth: viewModel.settings.windowSize.size.width, minHeight: viewModel.settings.windowSize.size.height)
         .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThickMaterial)
-                .opacity(0.9)
+            ZStack {
+                VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
+                    .ignoresSafeArea()
+                
+                Color(NSColor.windowBackgroundColor).opacity(0.5)
+            }
+            .opacity(viewModel.settings.windowOpacity)
         }
-        .ignoresSafeArea(.all, edges: .top)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.primary.opacity(0.12), lineWidth: 1)
-                .ignoresSafeArea(.all, edges: .top)
         )
+        .ignoresSafeArea(.all, edges: .top)
         .sheet(isPresented: $viewModel.showSettings) {
             SettingsView(store: UserDataStore.shared, onReload: {
                 viewModel.loadApps()

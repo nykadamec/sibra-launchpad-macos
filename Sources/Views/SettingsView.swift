@@ -77,52 +77,119 @@ struct SettingsView: View {
             }
         }
         .frame(width: 400, height: 440)
+        .background {
+            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     @ViewBuilder
     private var generalTab: some View {
         settingsSection("Display") {
-            Toggle("Enable Categories", isOn: $store.settings.categoriesEnabled)
-            Toggle("Show System Apps", isOn: Binding(
-                get: { store.settings.showSystemApps },
-                set: {
-                    store.settings.showSystemApps = $0
-                    store.save()
-                    onReload()
+            SettingsRow(title: "Window Size", icon: "arrow.up.left.and.arrow.down.right", iconColor: .indigo) {
+                Picker("", selection: Binding(
+                    get: { store.settings.windowSize },
+                    set: {
+                        store.settings.windowSize = $0
+                        store.save()
+                        NotificationCenter.default.post(name: NSNotification.Name("SibraWindowSizeChanged"), object: nil)
+                    }
+                )) {
+                    Text("Small").tag(UserDataStore.Settings.WindowSize.small)
+                    Text("Normal").tag(UserDataStore.Settings.WindowSize.normal)
+                    Text("Big").tag(UserDataStore.Settings.WindowSize.big)
                 }
-            ))
-            Toggle("Launch Animation", isOn: $store.settings.launchAnimation)
+                .pickerStyle(.segmented)
+                .frame(width: 180)
+            }
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Icon Scale", icon: "square.grid.2x2.fill", iconColor: .blue) {
+                Picker("", selection: Binding(
+                    get: { store.settings.iconScale },
+                    set: {
+                        store.settings.iconScale = $0
+                        store.save()
+                        onReload()
+                    }
+                )) {
+                    Text("Small").tag(UserDataStore.Settings.IconScale.small)
+                    Text("Normal").tag(UserDataStore.Settings.IconScale.normal)
+                    Text("Big").tag(UserDataStore.Settings.IconScale.big)
+                }
+                .pickerStyle(.segmented)
+                .frame(width: 180)
+            }
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Enable Categories", icon: "folder.fill", iconColor: .blue) {
+                Toggle("", isOn: $store.settings.categoriesEnabled)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+            }
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Show System Apps", icon: "gearshape.fill", iconColor: .gray) {
+                Toggle("", isOn: Binding(
+                    get: { store.settings.showSystemApps },
+                    set: {
+                        store.settings.showSystemApps = $0
+                        store.save()
+                        onReload()
+                    }
+                ))
+                .labelsHidden()
+                .toggleStyle(.switch)
+            }
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Launch Animation", icon: "sparkles", iconColor: .purple) {
+                Toggle("", isOn: $store.settings.launchAnimation)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+            }
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Window Opacity", icon: "macwindow", iconColor: .teal) {
+                HStack {
+                    Slider(value: Binding(
+                        get: { store.settings.windowOpacity },
+                        set: {
+                            store.settings.windowOpacity = $0
+                            store.save()
+                        }
+                    ), in: 0.2...1.0)
+                    .frame(width: 100)
+                    
+                    OpacityEditorView(opacity: $store.settings.windowOpacity) {
+                        store.save()
+                    }
+                }
+            }
         }
     }
 
     @ViewBuilder
     private var hotkeysTab: some View {
         settingsSection("Global Hotkey") {
-            HStack {
-                Text("Toggle Sibra")
-                Spacer()
+            SettingsRow(
+                title: "Toggle Sibra",
+                subtitle: "Click the button and press a new key combination",
+                icon: "keyboard.fill",
+                iconColor: .gray
+            ) {
                 HotkeyDisplayButton(hotkey: store.settings.globalHotkey) { newHotkey in
                     store.settings.globalHotkey = newHotkey
                     store.save()
                 }
             }
-            HStack {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.secondary)
-                Text("Click the button and press a new key combination")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
         }
 
         settingsSection("Per-App Hotkeys") {
-            Toggle("Enable Per-App Hotkeys", isOn: $store.settings.hotkeysEnabled)
-            HStack {
-                Image(systemName: "info.circle")
-                    .foregroundStyle(.secondary)
-                Text("Right-click any app → Set Hotkey to assign a personal shortcut")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            SettingsRow(
+                title: "Enable Per-App Hotkeys",
+                subtitle: "Right-click any app → Set Hotkey to assign a personal shortcut",
+                icon: "command.square.fill",
+                iconColor: .orange
+            ) {
+                Toggle("", isOn: $store.settings.hotkeysEnabled)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
             }
         }
     }
@@ -130,47 +197,42 @@ struct SettingsView: View {
     @ViewBuilder
     private var aboutTab: some View {
         settingsSection("Sibra") {
-            HStack {
-                Text("Version")
-                Spacer()
+            SettingsRow(title: "Version", icon: "info.circle.fill", iconColor: .blue) {
                 Text("1.0")
                     .foregroundStyle(.secondary)
             }
-            HStack {
-                Image(systemName: "doc.text")
-                    .foregroundStyle(.secondary)
-                Text("Log: \(Log.logPath)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            Divider().padding(.leading, 52)
+            SettingsRow(title: "Log Path", subtitle: Log.logPath, icon: "doc.text.fill", iconColor: .gray) {
+                EmptyView()
             }
         }
 
         settingsSection("Data") {
-            HStack {
-                Image(systemName: "folder")
-                    .foregroundStyle(.secondary)
-                Text("~/Library/Application Support/Sibra/")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            SettingsRow(title: "Storage Path", subtitle: "~/Library/Application Support/Sibra/", icon: "externaldrive.fill", iconColor: .blue) {
+                EmptyView()
             }
         }
     }
 
     @ViewBuilder
     private func settingsSection(_ title: String, @ViewBuilder content: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.secondary)
+                .padding(.horizontal, 4)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 0) {
                 content()
             }
-            .padding(12)
             .background {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.primary.opacity(0.05))
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.primary.opacity(0.04))
             }
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+            )
         }
     }
 }
@@ -295,5 +357,97 @@ struct TabButton: View {
         }
         .buttonStyle(.plain)
         .focusable(false)
+    }
+}
+
+struct SettingsRow<Content: View>: View {
+    let title: String
+    var subtitle: String? = nil
+    var icon: String? = nil
+    var iconColor: Color = .blue
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        HStack(spacing: 12) {
+            if let icon = icon {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(iconColor.opacity(0.1))
+                    Image(systemName: icon)
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(iconColor)
+                }
+                .frame(width: 28, height: 28)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 13))
+                    .foregroundStyle(.primary)
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Spacer()
+
+            content
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+    }
+}
+
+struct OpacityEditorView: View {
+    @Binding var opacity: Double
+    var onSave: () -> Void
+    
+    @State private var isEditing = false
+    @State private var textValue = ""
+    @FocusState private var isFocused: Bool
+    
+    var body: some View {
+        Group {
+            if isEditing {
+                TextField("", text: $textValue)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 12))
+                    .multilineTextAlignment(.trailing)
+                    .focused($isFocused)
+                    .frame(width: 35)
+                    .onSubmit {
+                        commitChange()
+                    }
+                    .onChange(of: isFocused) { _, focused in
+                        if !focused { commitChange() }
+                    }
+                    .onAppear {
+                        isFocused = true
+                    }
+            } else {
+                Text("\(Int(opacity * 100))%")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 35, alignment: .trailing)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        textValue = "\(Int(opacity * 100))"
+                        isEditing = true
+                    }
+            }
+        }
+    }
+    
+    private func commitChange() {
+        if let val = Double(textValue) {
+            let clamped = min(max(val, 20.0), 100.0)
+            opacity = clamped / 100.0
+            onSave()
+        }
+        isEditing = false
     }
 }
