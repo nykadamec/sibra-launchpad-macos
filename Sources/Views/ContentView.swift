@@ -22,6 +22,7 @@ struct VisualEffectView: NSViewRepresentable {
 struct ContentView: View {
 
     @State private var viewModel = AppsViewModel()
+    @State private var isHoveringSettings = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -51,10 +52,20 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "gearshape")
                             .font(.system(size: 14))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(isHoveringSettings ? Color.accentColor : .secondary)
+                            .scaleEffect(isHoveringSettings ? 1.15 : 1.0)
+                            .animation(.easeInOut(duration: 0.15), value: isHoveringSettings)
                     }
                     .buttonStyle(.plain)
                     .help("Settings")
+                    .onHover { hovering in
+                        isHoveringSettings = hovering
+                        if hovering {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
