@@ -2,7 +2,18 @@
 
 A minimalist, native macOS app launcher with a glass-styled floating window, global hotkey, and menu bar presence.
 
-![Sibra](docs/screenshots/main-window.png)
+![Sibra — Main Window](docs/screenshots/main-window.png)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Onboarding Step 1](docs/screenshots/onboarding-step1.png) | ![Onboarding Step 2](docs/screenshots/onboarding-step2.png) |
+| Onboarding — Welcome | Onboarding — Hotkey |
+| ![Onboarding Step 3](docs/screenshots/onboarding-step3.png) | ![Settings](docs/screenshots/settings.png) |
+| Onboarding — Done | Settings |
+| ![Main Window — Dark](docs/screenshots/main-window-dark.png) | |
+| Main Window — Dark Mode | |
 
 ## Features
 
