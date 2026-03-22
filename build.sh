@@ -16,6 +16,7 @@ echo "🔨 Compiling Swift sources..."
 swiftc \
     Sources/App/main.swift \
     Sources/App/AppDelegate.swift \
+    Sources/Utilities/WindowManager.swift \
     Sources/Utilities/Logger.swift \
     Sources/Models/UserData.swift \
     Sources/Models/AppItem.swift \
@@ -31,6 +32,7 @@ swiftc \
     Sources/Views/AppIconCardView.swift \
     Sources/Views/SearchBarView.swift \
     Sources/Views/SettingsView.swift \
+    Sources/Views/OnboardingView.swift \
     -o "$MACOS_DIR/$APP_NAME" \
     -target arm64-apple-macosx14.0 \
     -swift-version 6 \

@@ -194,12 +194,22 @@ struct SettingsView: View {
                         set: {
                             store.settings.windowOpacity = $0
                             store.save()
+                            NotificationCenter.default.post(
+                                name: NSNotification.Name("SibraSettingsDidChange"),
+                                object: nil,
+                                userInfo: ["windowOpacity": $0]
+                            )
                         }
                     ), in: 0.2...1.0)
                     .frame(width: 100)
                     
                     OpacityEditorView(opacity: $store.settings.windowOpacity) {
                         store.save()
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name("SibraSettingsDidChange"),
+                            object: nil,
+                            userInfo: ["windowOpacity": store.settings.windowOpacity]
+                        )
                     }
                 }
             }

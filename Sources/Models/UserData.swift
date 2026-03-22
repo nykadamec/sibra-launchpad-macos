@@ -82,6 +82,7 @@ class UserDataStore: @unchecked Sendable {
         var iconScale: IconScale = .normal
         var oneClickStart: Bool = false
         var theme: Theme = .system
+        var hasCompletedOnboarding: Bool = false
 
         init() {}
 
@@ -97,6 +98,7 @@ class UserDataStore: @unchecked Sendable {
             iconScale = try container.decodeIfPresent(IconScale.self, forKey: .iconScale) ?? .normal
             oneClickStart = try container.decodeIfPresent(Bool.self, forKey: .oneClickStart) ?? false
             theme = try container.decodeIfPresent(Theme.self, forKey: .theme) ?? .system
+            hasCompletedOnboarding = try container.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? false
         }
     }
 
