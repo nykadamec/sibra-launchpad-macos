@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		040A780D7F670D4FFC530E58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD463DE9CE8120F71CF4731 /* AppDelegate.swift */; };
 		0687B22E4A77AC76E219526B /* AppIconCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD383FCA28C93C94FFBCDCF /* AppIconCardView.swift */; };
-		133CB565109D8DBB3B773313 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */; };
 		22B5734A1085F4B7A473023B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D912F8BDA41402184FF4A4E8 /* Logger.swift */; };
 		41994614456D2E5B70525077 /* AppGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA022244901F04447631A5 /* AppGridView.swift */; };
 		52580A66E6EC28833B23AB4A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E27287821D889789B181E2 /* main.swift */; };
@@ -32,7 +31,6 @@
 		091F1B0230541F39F137F60D /* AppsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsViewModel.swift; sourceTree = "<group>"; };
 		0A68EED467FB5C37B68C5D0A /* Sibra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sibra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10E27287821D889789B181E2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
 		397C8F9C17413166EE1E4D5E /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		4AF871F646E5F2D887159943 /* FavouritesRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesRowView.swift; sourceTree = "<group>"; };
 		75BEDF68285EB434CA1C02B4 /* AppScannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScannerService.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 				A2DB6CE673FF9F960B21B28E /* AppLauncherService.swift */,
 				75BEDF68285EB434CA1C02B4 /* AppScannerService.swift */,
 				08A9EFF6E53544411F0F8D85 /* AppUninstallerService.swift */,
-				29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -213,7 +210,6 @@
 				FFEFF6A91AA697AB26E0F803 /* SearchBarView.swift in Sources */,
 				92E3A9E4A68A1964B3AC1F12 /* SettingsView.swift in Sources */,
 				7AFE37EDFCE04938AD2E8149 /* UserData.swift in Sources */,
-				133CB565109D8DBB3B773313 /* UserDataService.swift in Sources */,
 				52580A66E6EC28833B23AB4A /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
