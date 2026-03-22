@@ -69,19 +69,16 @@ struct ContentView: View {
                         Image(systemName: "gearshape")
                             .font(.system(size: 14))
                             .foregroundStyle(isHoveringSettings ? Color.accentColor : .secondary)
-                            .scaleEffect(isHoveringSettings ? 1.15 : 1.0)
-                            .animation(.easeInOut(duration: 0.15), value: isHoveringSettings)
                     }
                     .buttonStyle(.plain)
                     .help("Settings")
+                    .scaleEffect(isHoveringSettings ? 1.15 : 1.0)
+                    .animation(.easeInOut(duration: 0.15), value: isHoveringSettings)
+                    .sibraCursor(.pointingHand)
                     .onHover { hovering in
                         isHoveringSettings = hovering
-                        if hovering {
-                            NSCursor.pointingHand.push()
-                        } else {
-                            NSCursor.pop()
-                        }
                     }
+
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -172,6 +169,19 @@ struct ContentView: View {
         .onKeyPress(.escape) {
             NSApp.keyWindow?.orderOut(nil)
             return .handled
+        }
+    }
+}
+
+extension View {
+    func sibraCursor(_ cursor: NSCursor) -> some View {
+        self.onContinuousHover { phase in
+            switch phase {
+            case .active:
+                cursor.push()
+            case .ended:
+                NSCursor.pop()
+            }
         }
     }
 }
