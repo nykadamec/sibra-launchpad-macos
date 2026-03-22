@@ -87,7 +87,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         window.isOpaque = false
-        window.hasShadow = false
+        window.hasShadow = true
         window.isMovableByWindowBackground = false
         window.level = .floating
         window.acceptsMouseMovedEvents = true
@@ -129,6 +129,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "Show Sibra", action: #selector(showWindow), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "Settings…", action: #selector(showSettings), keyEquivalent: ","))
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         statusItem?.menu = menu
@@ -136,6 +138,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc @MainActor
     private func showWindow() {
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc @MainActor
+    private func showSettings() {
+        NotificationCenter.default.post(name: Notification.Name("SibraShowSettings"), object: nil)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }

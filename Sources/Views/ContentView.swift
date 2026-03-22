@@ -110,6 +110,9 @@ struct ContentView: View {
             viewModel.loadApps()
             NSApp.activate(ignoringOtherApps: true)
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SibraShowSettings"))) { _ in
+            viewModel.showSettings = true
+        }
         .onKeyPress(.escape) {
             NSApp.keyWindow?.orderOut(nil)
             return .handled
