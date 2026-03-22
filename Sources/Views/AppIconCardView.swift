@@ -12,6 +12,7 @@ struct AppIconCardView: View {
     let onAddToCategory: (UserDataStore.Category) -> Void
     let categories: [UserDataStore.Category]
     let currentCategory: UserDataStore.Category?
+    let iconScale: UserDataStore.Settings.IconScale
 
     @State private var isHovered = false
     @State private var isLaunching = false
@@ -20,8 +21,8 @@ struct AppIconCardView: View {
     // Drag data — the app's bundle path as UTF8 string
     private var dragItem: String { app.bundleURL.path }
     
-    private var iconScale: UserDataStore.Settings.IconScale {
-        UserDataStore.shared.settings.iconScale
+    private var isOneClickStart: Bool {
+        UserDataStore.shared.settings.oneClickStart
     }
 
     var body: some View {
@@ -50,13 +51,14 @@ struct AppIconCardView: View {
                 .frame(height: iconScale == .small ? 24 : 28)
                 .foregroundStyle(.primary)
         }
+        .drawingGroup()
         .frame(width: iconScale.cardWidth, height: iconScale.cardHeight)
         .contentShape(Rectangle())
         .opacity(isHovered ? 1.0 : 0.85)
         .onHover { hovering in
             isHovered = hovering
         }
-        .onTapGesture(count: 2) {
+        .onTapGesture(count: isOneClickStart ? 1 : 2) {
             launchWithAnimation()
         }
         .draggable(dragItem) {

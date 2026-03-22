@@ -116,7 +116,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.updateWindowSize()
+            Task { @MainActor in
+                self?.updateWindowSize()
+            }
         }
     }
 

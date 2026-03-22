@@ -145,6 +145,19 @@ struct SettingsView: View {
                     .toggleStyle(.switch)
             }
             Divider().padding(.leading, 52)
+            SettingsRow(title: "One Click Start", icon: "cursorarrow.click.2", iconColor: .green) {
+                Toggle("", isOn: Binding(
+                    get: { store.settings.oneClickStart },
+                    set: {
+                        store.settings.oneClickStart = $0
+                        store.save()
+                        onReload()
+                    }
+                ))
+                .labelsHidden()
+                .toggleStyle(.switch)
+            }
+            Divider().padding(.leading, 52)
             SettingsRow(title: "Window Opacity", icon: "macwindow", iconColor: .teal) {
                 HStack {
                     Slider(value: Binding(
@@ -198,7 +211,7 @@ struct SettingsView: View {
     private var aboutTab: some View {
         settingsSection("Sibra") {
             SettingsRow(title: "Version", icon: "info.circle.fill", iconColor: .blue) {
-                Text("1.0")
+                Text(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0")
                     .foregroundStyle(.secondary)
             }
             Divider().padding(.leading, 52)

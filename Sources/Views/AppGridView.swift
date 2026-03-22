@@ -11,8 +11,12 @@ struct AppGridView: View {
     let categories: [UserDataStore.Category]
     let currentCategory: (AppItem) -> UserDataStore.Category?
 
+    private var iconScale: UserDataStore.Settings.IconScale {
+        UserDataStore.shared.settings.iconScale
+    }
+
     private var columns: [GridItem] {
-        let cardWidth = UserDataStore.shared.settings.iconScale.cardWidth
+        let cardWidth = iconScale.cardWidth
         return [GridItem(.adaptive(minimum: cardWidth, maximum: cardWidth + 12), spacing: 16)]
     }
 
@@ -28,7 +32,8 @@ struct AppGridView: View {
                     isFavourite: UserDataStore.shared.isFavourite(app),
                     onAddToCategory: { cat in onAddToCategory(app, cat) },
                     categories: categories,
-                    currentCategory: currentCategory(app)
+                    currentCategory: currentCategory(app),
+                    iconScale: iconScale
                 )
             }
         }

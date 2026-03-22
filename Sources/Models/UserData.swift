@@ -74,6 +74,7 @@ class UserDataStore: @unchecked Sendable {
         var windowOpacity: Double = 0.9
         var windowSize: WindowSize = .normal
         var iconScale: IconScale = .normal
+        var oneClickStart: Bool = false
 
         init() {}
 
@@ -87,6 +88,7 @@ class UserDataStore: @unchecked Sendable {
             windowOpacity = try container.decodeIfPresent(Double.self, forKey: .windowOpacity) ?? 0.9
             windowSize = try container.decodeIfPresent(WindowSize.self, forKey: .windowSize) ?? .normal
             iconScale = try container.decodeIfPresent(IconScale.self, forKey: .iconScale) ?? .normal
+            oneClickStart = try container.decodeIfPresent(Bool.self, forKey: .oneClickStart) ?? false
         }
     }
 
