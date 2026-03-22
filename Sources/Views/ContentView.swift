@@ -91,9 +91,11 @@ struct ContentView: View {
                 .fill(.ultraThickMaterial)
                 .opacity(0.9)
         }
+        .ignoresSafeArea(.all, edges: .top)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.primary.opacity(0.12), lineWidth: 1)
+                .ignoresSafeArea(.all, edges: .top)
         )
         .sheet(isPresented: $viewModel.showSettings) {
             SettingsView(store: UserDataStore.shared, onReload: {
