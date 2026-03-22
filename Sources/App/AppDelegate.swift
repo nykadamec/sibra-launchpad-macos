@@ -93,7 +93,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.isMovable = false
 
         window.contentView = NSHostingView(rootView: contentView)
-        window.center()
+
+        // Center on the main screen using visibleFrame (respects menu bar & Dock)
+        let windowSize = NSSize(width: 800, height: 560)
+        if let screen = NSScreen.main ?? NSScreen.screens.first {
+            let screenFrame = screen.visibleFrame
+            let x = screenFrame.origin.x + (screenFrame.width - windowSize.width) / 2
+            let y = screenFrame.origin.y + (screenFrame.height - windowSize.height) / 2
+            window.setFrame(NSRect(x: x, y: y, width: windowSize.width, height: windowSize.height), display: true)
+        } else {
+            window.center()
+        }
 
         window.minSize = NSSize(width: 800, height: 560)
         window.maxSize = NSSize(width: 800, height: 560)
