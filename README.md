@@ -1,37 +1,42 @@
-# Sibra — macOS App Launcher
+# Sibra
+### A fast, beautiful app launcher for macOS
 
-A minimalist, native macOS app launcher with a glass-styled floating window, global hotkey, and menu bar presence.
+<p align="center">
+  <img src="docs/screenshots/main-window.png" width="600">
+</p>
 
-![Sibra — Main Window](docs/screenshots/main-window.png)
+---
 
-## Screenshots
+## What is Sibra?
 
-| | |
-|---|---|
-| ![Onboarding Step 1](docs/screenshots/onboarding-step1.png) | ![Onboarding Step 2](docs/screenshots/onboarding-step2.png) |
-| Onboarding — Welcome | Onboarding — Hotkey |
-| ![Onboarding Step 3](docs/screenshots/onboarding-step3.png) | ![Settings](docs/screenshots/settings.png) |
-| Onboarding — Done | Settings |
-| ![Main Window — Dark](docs/screenshots/main-window-dark.png) | |
-| Main Window — Dark Mode | |
+Sibra is a lightweight app launcher that lives in your menu bar — no Dock icon, no clutter. Press **⌃ Space** to bring up a gorgeous glass-styled window, find any app in milliseconds, and get back to work.
 
-## Features
+It's the app launcher you wish macOS Spotlight was — focused, fast, and beautiful.
 
-- **App Grid** — Browse all installed applications in a responsive icon grid
-- **Search** — Instant filtering as you type
-- **Global Hotkey** — Press `⌃ Space` (configurable) to toggle the window from anywhere
-- **Menu Bar** — Runs as a status bar app — no Dock icon
-- **Categories** — Organize apps into custom categories via drag & drop
-- **Favourites** — Pin frequently used apps for quick access
-- **Onboarding** — First-launch guide walks you through setup
-- **macOS Native** — Built with SwiftUI + AppKit, zero third-party dependencies
+---
 
-## Requirements
+## Why Sibra?
 
-- **macOS 14.0+** (Ventura or later)
-- **Arm64 or Intel** (universal binary)
+Most app launchers try to do too much. Sibra does one thing exceptionally well.
 
-## Installation
+### ⚡ Instant Access
+Press **⌃ Space** from anywhere on your Mac. Sibra pops up, you type, you launch. Gone in a flash.
+
+### 🎨 Beautiful by Default
+A frosted glass interface that looks right at home on your Mac. Supports light and dark mode, automatically.
+
+### 📁 Works With Your Apps
+Sibra reads everything in `/Applications` — no setup, no manual adding apps. Your whole library is there the moment you launch it.
+
+### 🗂 Stay Organized
+Drag apps into categories. Pin your favorites. Everything stays exactly where you put it.
+
+### 🔒 Privacy First
+Sibra runs entirely offline. No telemetry, no tracking, no accounts. Your data stays on your Mac.
+
+---
+
+## Getting Started
 
 ### Build from Source
 
@@ -39,98 +44,115 @@ A minimalist, native macOS app launcher with a glass-styled floating window, glo
 git clone https://github.com/your-org/sibra.git
 cd sibra
 ./build.sh
-open build/Sibra.app
 ```
+
+Then open `build/Sibra.app` from Finder.
 
 ### First Launch
 
-On first launch you'll see the onboarding screen. It explains the global hotkey (`⌃ Space`) and confirms you're ready to go.
+On first launch you'll see a quick 3-step guide explaining the global hotkey. That's it — no account, no setup.
 
-To reset the onboarding screen after the first run:
+To reset the guide later:
 
 ```bash
 ./reset-onboarding.sh
 ```
 
-## Usage
+---
 
-| Action | How |
-|--------|-----|
-| Show/Hide window | `⌃ Space` (customizable in Settings) |
-| Launch app | Click or press `Enter` on selected |
-| Search | Start typing in the search bar |
-| Favourite | Hover → right-click → Favourite |
-| Uninstall | Hover → right-click → Uninstall |
-| Reveal in Finder | Hover → right-click → Reveal in Finder |
-| Settings | Click ⚙️ in top-right corner |
-| Quit | Menu bar icon → Quit |
+## How to Use
+
+**Show the window** — Press `⌃ Space` from any app  
+**Launch an app** — Click it or use `↑ ↓ ← →` to navigate, then `Enter`  
+**Search** — Just start typing — no need to click the search bar  
+**Close the window** — Press `Escape` or click anywhere outside  
+
+### Right-Click Any App
+
+| Action | What It Does |
+|--------|-------------|
+| **Open** | Launch the app |
+| **Reveal in Finder** | Show the app file in Finder |
+| **Uninstall** | Move to Trash |
+| **Favourite** | Pin to the top row |
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/onboarding-step1.png" width="400"> &nbsp;
+  <img src="docs/screenshots/onboarding-step2.png" width="400">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/onboarding-step3.png" width="400"> &nbsp;
+  <img src="docs/screenshots/settings.png" width="400">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/main-window-dark.png" width="600">
+</p>
+
+---
 
 ## Settings
 
-Open Settings via the ⚙️ button or the menu bar icon. Available options:
+Open Settings via the ⚙️ button in the top-right corner or through the menu bar icon.
 
-- **Window opacity** — Adjust transparency (live preview)
-- **Icon size** — Small / Normal / Big
-- **Theme** — System / Light / Dark
-- **Categories** — Enable/disable sidebar
-- **Show system apps** — Include macOS system apps
-- **Global hotkey** — Customize the toggle shortcut
+**Window Opacity** — Drag the slider to adjust transparency  
+**Icon Size** — Small, Normal, or Big  
+**Theme** — System, Light, or Dark  
+**Categories** — Toggle the sidebar  
+**Show System Apps** — Include macOS built-in apps  
+**Global Hotkey** — Customize the shortcut that shows the window  
 
-## Architecture
-
-```
-Sources/
-├── App/
-│   ├── main.swift              # Manual NSApplication entry point
-│   └── AppDelegate.swift       # App lifecycle
-├── Utilities/
-│   ├── WindowManager.swift     # Window state, opacity, lifecycle
-│   └── HotkeyManager.swift     # Global hotkey via Carbon API
-├── ViewModels/
-│   └── AppsViewModel.swift     # @Observable app state
-├── Models/
-│   └── UserData.swift          # Persistence (JSON), categories, settings
-└── Views/
-    ├── ContentView.swift       # Root SwiftUI view
-    ├── AppGridView.swift       # LazyVGrid layout
-    ├── AppIconCardView.swift   # App card with hover states
-    ├── SearchBarView.swift     # Search input
-    ├── CategorySidebarView.swift # Category sidebar
-    ├── FavouritesRowView.swift  # Pinned apps row
-    ├── SettingsView.swift      # Settings sheet
-    └── OnboardingView.swift     # First-launch guide
-```
+---
 
 ## Keyboard Shortcuts
 
-| Key | Action |
-|-----|--------|
-| `↑ ↓ ← →` | Navigate app grid |
-| `Enter` / `Return` | Launch selected app |
+| Shortcut | Action |
+|----------|--------|
+| `⌃ Space` | Toggle Sibra (works globally) |
+| `↑ ↓ ← →` | Navigate the app grid |
+| `Enter` | Launch selected app |
+| `Escape` | Hide the window |
 | `⌘ Enter` | Reveal selected app in Finder |
-| `Escape` | Hide window |
-| `⌃ Space` | Toggle Sibra (global, works from any app) |
+
+---
+
+## Requirements
+
+- **macOS 14.0+** (Sonoma or later)  
+- **Arm64 or Intel Mac**
+
+---
 
 ## Permissions
 
-Sibra requires **Accessibility** permission to register global keyboard shortcuts. On first global hotkey use, macOS will prompt you to grant access in **System Settings → Privacy & Security → Accessibility**.
+On first use of the global hotkey, macOS will ask you to grant **Accessibility** permission. This is required to register keyboard shortcuts system-wide. Go to **System Settings → Privacy & Security → Accessibility** and enable Sibra.
 
-## Data Storage
+---
 
-All user data is stored in:
+## Your Data
+
+All settings, categories, and favourites are stored locally:
 
 ```
 ~/Library/Application Support/Sibra/data.json
 ```
 
-Includes: categories, favourites, pinned hotkeys, and all settings.
+Nothing is sent anywhere. Ever.
 
-## Tech Stack
+---
+
+## Built With
 
 - **Swift 6** + **SwiftUI** + **AppKit**
 - **Carbon API** for global hotkey registration
-- No third-party dependencies
-- Swift build script (`build.sh`) — no Xcode required
+- Zero third-party dependencies
+
+---
 
 ## License
 
