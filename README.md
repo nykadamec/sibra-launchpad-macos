@@ -1,12 +1,6 @@
 # Sibra
 ### A fast, beautiful app launcher for macOS
 
-<p align="center">
-  <img src="docs/screenshots/main-window.png" width="600">
-</p>
-
----
-
 ## What is Sibra?
 
 Sibra is a lightweight app launcher that lives in your menu bar — no Dock icon, no clutter. Press **⌃ Space** to bring up a gorgeous glass-styled window, find any app in milliseconds, and get back to work.
@@ -75,24 +69,6 @@ To reset the guide later:
 | **Reveal in Finder** | Show the app file in Finder |
 | **Uninstall** | Move to Trash |
 | **Favourite** | Pin to the top row |
-
----
-
-## Screenshots
-
-<p align="center">
-  <img src="docs/screenshots/onboarding-step1.png" width="400"> &nbsp;
-  <img src="docs/screenshots/onboarding-step2.png" width="400">
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/onboarding-step3.png" width="400"> &nbsp;
-  <img src="docs/screenshots/settings.png" width="400">
-</p>
-
-<p align="center">
-  <img src="docs/screenshots/main-window-dark.png" width="600">
-</p>
 
 ---
 
