@@ -75,6 +75,7 @@ struct SettingsView: View {
                 }
                 .padding(20)
             }
+            .scrollIndicators(.hidden)
         }
         .frame(width: 400, height: 440)
         .background {
