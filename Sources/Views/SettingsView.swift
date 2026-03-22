@@ -125,7 +125,7 @@ struct SettingsView: View {
             HStack {
                 Image(systemName: "doc.text")
                     .foregroundStyle(.secondary)
-                Text("Log: /tmp/Sibra.log")
+                Text("Log: \(Log.logPath)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

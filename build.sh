@@ -54,17 +54,17 @@ RUNSCRIPT
 chmod +x "$OUT_DIR/run_sibra.sh"
 cp Resources/Sibra.entitlements "$CONTENTS_DIR/Sibra.entitlements"
 
-# Create launch script with logging
+# Create launch script
 cat > "$OUT_DIR/run_sibra.sh" << 'RUNSCRIPT'
 #!/bin/bash
 DIR="$(cd "$(dirname "$0")" && pwd)"
-LOG="$DIR/Sibra.log"
-exec > "$LOG" 2>&1
-echo "=== Sibra started at $(date) ==="
 open "$DIR/Sibra.app"
+echo "Log: ~/Library/Application Support/Sibra/logs/Sibra.log"
+echo "View log: tail -f ~/Library/Application\ Support/Sibra/logs/Sibra.log"
 RUNSCRIPT
 chmod +x "$OUT_DIR/run_sibra.sh"
 
 echo "✅ Build complete: $APP_DIR"
 echo "🚀 Run via: open $APP_DIR"
-echo "   Or:      $OUT_DIR/run_sibra.sh (logs to $OUT_DIR/Sibra.log)"
+echo "   Or:      $OUT_DIR/run_sibra.sh"
+echo "   Log:     ~/Library/Application Support/Sibra/logs/Sibra.log"
