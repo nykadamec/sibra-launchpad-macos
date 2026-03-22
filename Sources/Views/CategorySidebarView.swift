@@ -128,10 +128,10 @@ struct CategorySidebarView: View {
 
         provider.loadItem(forTypeIdentifier: "public.utf8-plain-text", options: nil) { data, _ in
             guard let data = data as? Data,
-                  let path = String(data: data, encoding: .utf8),
-                  let app = allApps().first(where: { $0.bundleURL.path == path }) else { return }
+                  let path = String(data: data, encoding: .utf8) else { return }
 
-            DispatchQueue.main.async {
+            Task { @MainActor in
+                guard let app = allApps().first(where: { $0.bundleURL.path == path }) else { return }
                 onAppDropped(app, category)
             }
         }

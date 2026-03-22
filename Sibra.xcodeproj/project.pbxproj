@@ -9,11 +9,17 @@
 /* Begin PBXBuildFile section */
 		040A780D7F670D4FFC530E58 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD463DE9CE8120F71CF4731 /* AppDelegate.swift */; };
 		0687B22E4A77AC76E219526B /* AppIconCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD383FCA28C93C94FFBCDCF /* AppIconCardView.swift */; };
+		133CB565109D8DBB3B773313 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */; };
+		22B5734A1085F4B7A473023B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D912F8BDA41402184FF4A4E8 /* Logger.swift */; };
 		41994614456D2E5B70525077 /* AppGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAA022244901F04447631A5 /* AppGridView.swift */; };
 		52580A66E6EC28833B23AB4A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E27287821D889789B181E2 /* main.swift */; };
 		78CBEDEA6755A1B26104A65E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7B8B4C062CFF2C210D9979 /* ContentView.swift */; };
+		7AFE37EDFCE04938AD2E8149 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C8F9C17413166EE1E4D5E /* UserData.swift */; };
+		7FABFB76CA2FDE1B8509D3B9 /* FavouritesRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF871F646E5F2D887159943 /* FavouritesRowView.swift */; };
 		8C87E7DD06E164FD69274BA4 /* AppScannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BEDF68285EB434CA1C02B4 /* AppScannerService.swift */; };
+		92E3A9E4A68A1964B3AC1F12 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BB7BD5BCD841A3C6C1FED6 /* SettingsView.swift */; };
 		BDA0D7F2E43B3BBF125C902F /* AppLauncherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DB6CE673FF9F960B21B28E /* AppLauncherService.swift */; };
+		DF1D2520D81EC5C2592F5632 /* CategorySidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B1146C4C1A26BA48E60D7D /* CategorySidebarView.swift */; };
 		E288F8FF386ADCF46A321BBA /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE4E0DF16106D30961D5214 /* HotkeyManager.swift */; };
 		EF45D2AFF02C91B21F4A6613 /* AppsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F1B0230541F39F137F60D /* AppsViewModel.swift */; };
 		F1BE4B78DBD0819743DA9FF7 /* AppUninstallerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A9EFF6E53544411F0F8D85 /* AppUninstallerService.swift */; };
@@ -26,10 +32,16 @@
 		091F1B0230541F39F137F60D /* AppsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsViewModel.swift; sourceTree = "<group>"; };
 		0A68EED467FB5C37B68C5D0A /* Sibra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sibra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10E27287821D889789B181E2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
+		397C8F9C17413166EE1E4D5E /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		4AF871F646E5F2D887159943 /* FavouritesRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesRowView.swift; sourceTree = "<group>"; };
 		75BEDF68285EB434CA1C02B4 /* AppScannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppScannerService.swift; sourceTree = "<group>"; };
 		9DE4E0DF16106D30961D5214 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		A2DB6CE673FF9F960B21B28E /* AppLauncherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLauncherService.swift; sourceTree = "<group>"; };
+		B2BB7BD5BCD841A3C6C1FED6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		C0242015A2D2C4BAA8841DAD /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
+		D912F8BDA41402184FF4A4E8 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		D9B1146C4C1A26BA48E60D7D /* CategorySidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySidebarView.swift; sourceTree = "<group>"; };
 		DAD383FCA28C93C94FFBCDCF /* AppIconCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconCardView.swift; sourceTree = "<group>"; };
 		DF28765126304479BE6269C3 /* AppItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppItem.swift; sourceTree = "<group>"; };
 		EEAA022244901F04447631A5 /* AppGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGridView.swift; sourceTree = "<group>"; };
@@ -42,6 +54,7 @@
 			isa = PBXGroup;
 			children = (
 				9DE4E0DF16106D30961D5214 /* HotkeyManager.swift */,
+				D912F8BDA41402184FF4A4E8 /* Logger.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -74,6 +87,7 @@
 				A2DB6CE673FF9F960B21B28E /* AppLauncherService.swift */,
 				75BEDF68285EB434CA1C02B4 /* AppScannerService.swift */,
 				08A9EFF6E53544411F0F8D85 /* AppUninstallerService.swift */,
+				29750B38A4B401ECBBB6AFE5 /* UserDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -107,8 +121,11 @@
 			children = (
 				EEAA022244901F04447631A5 /* AppGridView.swift */,
 				DAD383FCA28C93C94FFBCDCF /* AppIconCardView.swift */,
+				D9B1146C4C1A26BA48E60D7D /* CategorySidebarView.swift */,
 				FD7B8B4C062CFF2C210D9979 /* ContentView.swift */,
+				4AF871F646E5F2D887159943 /* FavouritesRowView.swift */,
 				C0242015A2D2C4BAA8841DAD /* SearchBarView.swift */,
+				B2BB7BD5BCD841A3C6C1FED6 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -117,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				DF28765126304479BE6269C3 /* AppItem.swift */,
+				397C8F9C17413166EE1E4D5E /* UserData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -187,9 +205,15 @@
 				8C87E7DD06E164FD69274BA4 /* AppScannerService.swift in Sources */,
 				F1BE4B78DBD0819743DA9FF7 /* AppUninstallerService.swift in Sources */,
 				EF45D2AFF02C91B21F4A6613 /* AppsViewModel.swift in Sources */,
+				DF1D2520D81EC5C2592F5632 /* CategorySidebarView.swift in Sources */,
 				78CBEDEA6755A1B26104A65E /* ContentView.swift in Sources */,
+				7FABFB76CA2FDE1B8509D3B9 /* FavouritesRowView.swift in Sources */,
 				E288F8FF386ADCF46A321BBA /* HotkeyManager.swift in Sources */,
+				22B5734A1085F4B7A473023B /* Logger.swift in Sources */,
 				FFEFF6A91AA697AB26E0F803 /* SearchBarView.swift in Sources */,
+				92E3A9E4A68A1964B3AC1F12 /* SettingsView.swift in Sources */,
+				7AFE37EDFCE04938AD2E8149 /* UserData.swift in Sources */,
+				133CB565109D8DBB3B773313 /* UserDataService.swift in Sources */,
 				52580A66E6EC28833B23AB4A /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

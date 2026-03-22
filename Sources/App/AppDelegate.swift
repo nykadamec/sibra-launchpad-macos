@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var window: NSWindow!
@@ -9,9 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var isSheetOpen = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        Task { @MainActor in
-            await self.setup()
-        }
+        setup()
     }
 
     @MainActor
@@ -27,8 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: window,
             queue: .main
         ) { [weak self] _ in
-            guard let self = self, !self.isSheetOpen else { return }
-            DispatchQueue.main.async {
+            Task { @MainActor in
+                guard let self = self, !self.isSheetOpen else { return }
                 self.window.orderOut(nil)
             }
         }
@@ -39,14 +38,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.isSheetOpen = true
+            Task { @MainActor in
+                self?.isSheetOpen = true
+            }
         }
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name("SibraSheetClosed"),
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.isSheetOpen = false
+            Task { @MainActor in
+                self?.isSheetOpen = false
+            }
         }
 
         window.makeKeyAndOrderFront(nil)
