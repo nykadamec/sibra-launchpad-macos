@@ -52,9 +52,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        window.makeKeyAndOrderFront(nil)
-        window.makeFirstResponder(window.contentView)
-        NSApp.activate(ignoringOtherApps: true)
+        // Window hidden on launch — shown only via hotkey or menu bar
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

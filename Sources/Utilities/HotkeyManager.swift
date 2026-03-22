@@ -14,6 +14,9 @@ final class HotkeyManager: @unchecked Sendable {
     }
 
     func register() {
+        let hotkeyString = UserDataStore.shared.settings.globalHotkey
+        let (keyCode, modifiers) = HotkeyManager.parse(hotkeyString)
+
         var eventType = EventTypeSpec(
             eventClass: OSType(kEventClassKeyboard),
             eventKind: UInt32(kEventHotKeyPressed)
@@ -35,7 +38,6 @@ final class HotkeyManager: @unchecked Sendable {
             )
 
             if status == noErr && hotkeyID.id == HotkeyManager.hotkeyID.id {
-                // Carbon hotkey events always fire on the main thread
                 let cb = manager.callback
                 Task { @MainActor in
                     cb()
@@ -54,10 +56,6 @@ final class HotkeyManager: @unchecked Sendable {
             selfPtr,
             &eventHandler
         )
-
-        // Register ⌃Space — keycode 49 = Space, modifiers = control
-        let modifiers: UInt32 = UInt32(controlKey)
-        let keyCode: UInt32 = 49
 
         let hotkeyIDStruct = HotkeyManager.hotkeyID
         RegisterEventHotKey(
@@ -83,5 +81,44 @@ final class HotkeyManager: @unchecked Sendable {
 
     deinit {
         unregister()
+    }
+
+    // MARK: - Parsing
+
+    private static let modifierMap: [String: UInt32] = [
+        "⌃": UInt32(controlKey),
+        "⌘": UInt32(cmdKey),
+        "⇧": UInt32(shiftKey),
+        "⌥": UInt32(optionKey),
+    ]
+
+    private static let keycodeMap: [String: UInt32] = [
+        "A": 0, "B": 11, "C": 8, "D": 2, "E": 14, "F": 3, "G": 5,
+        "H": 4, "I": 34, "J": 38, "K": 40, "L": 37, "M": 46, "N": 45,
+        "O": 31, "P": 35, "Q": 12, "R": 15, "S": 1, "T": 17, "U": 32,
+        "V": 9, "W": 13, "X": 7, "Y": 16, "Z": 6,
+        "0": 29, "1": 18, "2": 19, "3": 20, "4": 21, "5": 23,
+        "6": 22, "7": 26, "8": 28, "9": 25,
+        "SPACE": 49, "←": 123, "→": 124, "↑": 126, "↓": 125,
+        "RETURN": 36, "ENTER": 36, "TAB": 48, "ESCAPE": 53, "ESC": 53,
+        "DELETE": 51, "BACKSPACE": 51,
+    ]
+
+    static func parse(_ hotkey: String) -> (keyCode: UInt32, modifiers: UInt32) {
+        var modifiers: UInt32 = 0
+        var keyPart = hotkey
+
+        // Extract modifiers from the beginning of the string
+        while let prefix = keyPart.prefix(1).description as String?,
+              let mod = modifierMap[prefix] {
+            modifiers |= mod
+            keyPart = String(keyPart.dropFirst(prefix.count))
+        }
+
+        // Look up keycode (case-insensitive)
+        let upper = keyPart.uppercased()
+        let keyCode = keycodeMap[upper] ?? 49 // default to Space (49)
+
+        return (keyCode, modifiers)
     }
 }
