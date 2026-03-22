@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct SettingsView: View {
 
@@ -7,6 +8,7 @@ struct SettingsView: View {
     let onReload: () -> Void
 
     @State private var selectedTab = 0
+    @Namespace private var tabAnimation
 
     var body: some View {
         VStack(spacing: 0) {
@@ -30,18 +32,30 @@ struct SettingsView: View {
             .padding(.bottom, 12)
 
             // Tab bar
-            HStack(spacing: 0) {
-                TabButton(title: "General", icon: "gearshape", isSelected: selectedTab == 0) {
-                    selectedTab = 0
+            HStack(spacing: 4) {
+                TabButton(title: "General", icon: "gearshape", isSelected: selectedTab == 0, namespace: tabAnimation) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedTab = 0
+                    }
                 }
-                TabButton(title: "Hotkeys", icon: "keyboard", isSelected: selectedTab == 1) {
-                    selectedTab = 1
+                TabButton(title: "Hotkeys", icon: "keyboard", isSelected: selectedTab == 1, namespace: tabAnimation) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedTab = 1
+                    }
                 }
-                TabButton(title: "About", icon: "info.circle", isSelected: selectedTab == 2) {
-                    selectedTab = 2
+                TabButton(title: "About", icon: "info.circle", isSelected: selectedTab == 2, namespace: tabAnimation) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedTab = 2
+                    }
                 }
             }
+            .padding(4)
+            .background {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.primary.opacity(0.05))
+            }
             .padding(.horizontal, 20)
+            .padding(.bottom, 12)
 
             Divider()
 
@@ -191,13 +205,15 @@ struct HotkeyDisplayButton: View {
         .onTapGesture {
             isRecording = true
             hotkeyText = ""
-            startMonitoring()
         }
         .onChange(of: isRecording) { _, newVal in
-            if !newVal {
+            if newVal {
+                startMonitoring()
+            } else {
                 stopMonitoring()
                 if !hotkeyText.isEmpty {
                     onChange(hotkeyText)
+                    NotificationCenter.default.post(name: .globalHotkeyDidChange, object: nil)
                 }
             }
         }
@@ -207,8 +223,8 @@ struct HotkeyDisplayButton: View {
     }
 
     private func startMonitoring() {
+        stopMonitoring()
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            guard isRecording else { return event }
             let chars = event.charactersIgnoringModifiers ?? ""
             var parts: [String] = []
             let mods = event.modifierFlags
@@ -216,9 +232,20 @@ struct HotkeyDisplayButton: View {
             if mods.contains(.option) { parts.append("⌥") }
             if mods.contains(.shift) { parts.append("⇧") }
             if mods.contains(.command) { parts.append("⌘") }
-            let key = chars.uppercased()
+            
+            var key = chars.uppercased()
+            let keyCode = event.keyCode
+            if keyCode == 49 { key = "Space" }
+            else if keyCode == 36 { key = "Return" }
+            else if keyCode == 53 { key = "Esc" }
+            else if keyCode == 51 { key = "Backspace" }
+            else if keyCode == 48 { key = "Tab" }
+            
             if !key.isEmpty && !parts.isEmpty {
                 hotkeyText = parts.joined() + key
+                DispatchQueue.main.async {
+                    isRecording = false
+                }
                 return nil
             }
             return nil
@@ -237,26 +264,36 @@ struct TabButton: View {
     let title: String
     let icon: String
     let isSelected: Bool
+    let namespace: Namespace.ID
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 14))
+                    .font(.system(size: 13, weight: isSelected ? .semibold : .medium))
                 Text(title)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 13, weight: isSelected ? .semibold : .medium))
             }
             .foregroundStyle(isSelected ? .primary : .secondary)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
             .background {
                 if isSelected {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.primary.opacity(0.08))
+#if os(macOS)
+                        .fill(Color(nsColor: .windowBackgroundColor))
+#else
+                        .fill(Color(UIColor.systemBackground))
+#endif
+                        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                        .matchedGeometryEffect(id: "TabBackground", in: namespace)
                 }
             }
         }
         .buttonStyle(.plain)
+        .focusable(false)
     }
 }

@@ -1,6 +1,10 @@
 import AppKit
 import SwiftUI
 
+extension Notification.Name {
+    static let globalHotkeyDidChange = Notification.Name("GlobalHotkeyDidChange")
+}
+
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -156,6 +160,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hotkeyManager = HotkeyManager { [weak self] in
             self?.toggleWindow()
         }
+        hotkeyManager.register()
+
+        // Re-register global hotkey when it changes
+        NotificationCenter.default.addObserver(
+            forName: .globalHotkeyDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.reregisterGlobalHotkey()
+            }
+        }
+    }
+
+    @MainActor
+    func reregisterGlobalHotkey() {
+        hotkeyManager.unregister()
         hotkeyManager.register()
     }
 

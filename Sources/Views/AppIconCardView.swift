@@ -201,16 +201,21 @@ struct HotkeyRecorderSheet: View {
             if let existing = UserDataStore.shared.hotkey(for: app) {
                 hotkeyText = existing
             }
-            startMonitoring()
         }
         .onDisappear {
             stopMonitoring()
+        }
+        .onChange(of: isRecording) { _, newVal in
+            if newVal {
+                startMonitoring()
+            } else {
+                stopMonitoring()
+            }
         }
     }
 
     private func startMonitoring() {
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            guard isRecording else { return event }
             let chars = event.charactersIgnoringModifiers ?? ""
             var parts: [String] = []
             let mods = event.modifierFlags
